@@ -276,8 +276,10 @@ for name in MANAGERS:
         wsX.cell(r, 2, k)
         wsX.cell(r, 3, f"=INDEX(Нед_Раб,{k})")
         wsX.cell(r, 4, f"=SUM(H{df}:H{dl})")
-        wsX.cell(r, 5, f"=SUMIFS($H${df}:$H${dl},$D${df}:$D${dl},INDEX($D${df}:$D${dl},1))")
-        wsX.cell(r, 6, f"=SUMIFS($H${df}:$H${dl},$D${df}:$D${dl},INDEX($D${df}:$D${dl},7))")
+        # «Из них» — вклад каждого месяца в неделю. Формула через D-диапазон той же недели:
+        # SUMIFS по столбцу H не работает (Excel запрещает пересечение диапазонов разной ширины).
+        wsX.cell(r, 5, f"=SUMPRODUCT(($D${df}:$D${dl}=INDEX($D${df}:$D${dl},1))*($E${df}:$E${dl}))")
+        wsX.cell(r, 6, f"=SUMPRODUCT(($D${df}:$D${dl}=INDEX($D${df}:$D${dl},7))*($E${df}:$E${dl}))")
         wsX.cell(r, 7, f"=IF(ROUND(E{r}+F{r}-D{r},2)=0,\"OK\",\"ОШИБКА\")")
     W2ROWS[name] = (first, rp + NW - 1)
     rp += NW

@@ -136,9 +136,10 @@ def main(path):
             rr = wk2_first + mi * NW + w_i
             seg = [(d, k) for d, k, w in cal if s <= d <= e]
             tot = sum(day_plan[(mi, d)] for d, k in seg)
+            # как в формулах листа: A = вклад месяца первого дня недели, B = вклад месяца последнего дня
             kA, kB = seg[0][1], seg[-1][1]
-            pA = sum(day_plan[(mi, d)] for d, k in seg if k == kA)
-            pB = sum(day_plan[(mi, d)] for d, k in seg if k == kB)
+            pA = sum(v for (d, k), v in ((x, day_plan[(mi, x[0])]) for x in seg) if k == kA)
+            pB = sum(day_plan[(mi, d)] for d, k in seg if k == kB and k != kA)
             wsRC.cell(rr, 2).value = w_i + 1
             wsRC.cell(rr, 3).value = week_wd[w_i]
             wsRC.cell(rr, 4).value = round(tot, 2)
